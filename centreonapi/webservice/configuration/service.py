@@ -64,6 +64,24 @@ class ServiceTemplate(CentreonNotifyObject):
             self._clapi_action,
             values)
 
+    def enable(self):
+        s, e = self.webservice.call_clapi(
+            'enable',
+            self._clapi_action,
+            self.reference)
+        if s:
+            self.activate = "1"
+        return s, e
+
+    def disable(self):
+        s, e = self.webservice.call_clapi(
+            'disable',
+            self._clapi_action,
+            self.reference)
+        if s:
+            self.activate = "0"
+        return s, e
+
 
 class Service(ServiceTemplate):
 
