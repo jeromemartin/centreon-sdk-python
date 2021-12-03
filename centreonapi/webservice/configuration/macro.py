@@ -11,6 +11,8 @@ class Macro:
             self.is_password = 0
         if self.internal_name.startswith("$"):
             self.name = self.internal_name.replace(f"$_{self.ENGINE_NAME}", "")[:-1]
+        else:
+            self.name = self.internal_name
 
     def __repr__(self):
         return self.internal_name
