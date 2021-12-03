@@ -366,6 +366,8 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
             for h in host['result']:
                 host_obj = Host(h)
                 self.hosts[host_obj.name] = host_obj
+                if host_obj.alias:
+                    self.hosts[host_obj.alias] = host_obj
 
     @common.CentreonDecorator.pre_refresh
     def list(self):
