@@ -50,15 +50,14 @@ class ServiceTemplate(CentreonNotifyObject):
             description = ''
         if is_password is None:
             is_password = 0
-        values = [self.description, name, value, is_password, description]
+        values = self.reference + [name, value, is_password, description]
         return self.webservice.call_clapi(
             'setmacro',
             self._clapi_action,
             values)
 
     def deletemacro(self, macro):
-        values = [self.description,
-                  "|".join(common.build_param(macro, Macro))]
+        values = self.reference + ["|".join(common.build_param(macro, ServiceMacro))]
         return self.webservice.call_clapi(
             'delmacro',
             self._clapi_action,
