@@ -356,7 +356,7 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
     def __init__(self):
         super(Hosts, self).__init__()
         self.hosts = dict()
-        self.__clapi_action = 'HOST'
+        self._clapi_action = 'HOST'
 
     def __contains__(self, name):
         return name in self.hosts.keys() or None
@@ -373,7 +373,7 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
         self.hosts.clear()
         state, host = self.webservice.call_clapi(
                             'show',
-                            self.__clapi_action)
+                            self._clapi_action)
         if state and len(host['result']) > 0:
             for h in host['result']:
                 host_obj = Host(h)
@@ -414,7 +414,7 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
         ]
         return self.webservice.call_clapi(
                     'add',
-                    self.__clapi_action,
+                    self._clapi_action,
                     values)
 
     @common.CentreonDecorator.post_refresh
@@ -422,18 +422,18 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
         value = str(common.build_param(host, Host)[0])
         return self.webservice.call_clapi(
                     'del',
-                    self.__clapi_action,
+                    self._clapi_action,
                     value)
 
 
 class HostTemplates(Hosts):
     def __init__(self):
         super(HostTemplates, self).__init__()
-        self.__clapi_action = 'HTPL'
+        self._clapi_action = 'HTPL'
 
 
 class HostTemplate(Host):
 
     def __init__(self, properties):
         super(HostTemplate, self).__init__(properties)
-        self.__clapi_action = 'HTPL'
+        self._clapi_action = 'HTPL'
