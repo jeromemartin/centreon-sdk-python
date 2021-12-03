@@ -330,9 +330,7 @@ class Host(common.CentreonObject):
 
 
 class HostMacro(Macro):
-    def __init__(self, properties):
-        super(HostMacro, self).__init__(properties)
-        self.engine_name = '$_HOST' + self.name + '$'
+    ENGINE_NAME = "HOST"
 
 
 class Hosts(common.CentreonDecorator, common.CentreonClass):
