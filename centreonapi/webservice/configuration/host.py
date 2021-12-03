@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import centreonapi.webservice.configuration.common as common
-from centreonapi.webservice.configuration.poller import Poller
-from centreonapi.webservice.configuration.hostgroups import HostGroup
 from centreonapi.webservice.configuration.contact import ContactGroup, Contact
-from centreonapi.webservice import Webservice
+from centreonapi.webservice.configuration.hostgroups import HostGroup
 from centreonapi.webservice.configuration.macro import Macro
+from centreonapi.webservice.configuration.poller import Poller
+
 
 class Host(common.CentreonObject):
 
     def __init__(self, properties):
-        self.webservice = Webservice.getInstance()
-        self.__clapi_action = 'HOST'
+        super(Host, self).__init__()
+        self._clapi_action = 'HOST'
         self.id = properties.get('id')
         self.name = properties.get('name')
         self.activate = properties.get('activate')
@@ -28,9 +28,9 @@ class Host(common.CentreonObject):
     def getmacro(self):
         self.macros.clear()
         state, macro = self.webservice.call_clapi(
-                            'getmacro',
-                            self.__clapi_action,
-                            self.name)
+            'getmacro',
+            self._clapi_action,
+            self.name)
         if state:
             if len(macro['result']) > 0:
                 for m in macro['result']:
@@ -51,7 +51,7 @@ class Host(common.CentreonObject):
         values = [self.name, macro, value, is_password, description]
         return self.webservice.call_clapi(
             'setmacro',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def deletemacro(self, macro):
@@ -59,14 +59,14 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(macro, HostMacro))]
         return self.webservice.call_clapi(
             'delmacro',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def gettemplate(self):
         state, template = self.webservice.call_clapi(
-                            'gettemplate',
-                            self.__clapi_action,
-                            self.name)
+            'gettemplate',
+            self._clapi_action,
+            self.name)
         if state:
             if len(template['result']) > 0:
                 for t in template['result']:
@@ -83,7 +83,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(template, HostTemplate))]
         return self.webservice.call_clapi(
             'settemplate',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def addtemplate(self, template=None):
@@ -91,7 +91,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(template, HostTemplate))]
         return self.webservice.call_clapi(
             'addtemplate',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def deletetemplate(self, template=None):
@@ -99,29 +99,29 @@ class Host(common.CentreonObject):
                   str("|".join(common.build_param(template, HostTemplate)))]
         return self.webservice.call_clapi(
             'deltemplate',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def applytemplate(self):
         return self.webservice.call_clapi(
             'applytpl',
-            self.__clapi_action,
+            self._clapi_action,
             self.name)
 
     def enable(self):
         s, e = self.webservice.call_clapi(
-                'enable',
-                self.__clapi_action,
-                self.name)
+            'enable',
+            self._clapi_action,
+            self.name)
         if s:
             self.activate = "1"
         return s, e
 
     def disable(self):
         s, e = self.webservice.call_clapi(
-                'disable',
-                self.__clapi_action,
-                self.name)
+            'disable',
+            self._clapi_action,
+            self.name)
         if s:
             self.activate = "0"
         return s, e
@@ -131,22 +131,22 @@ class Host(common.CentreonObject):
                   str(common.build_param(instance, Poller)[0])]
         return self.webservice.call_clapi(
             'setinstance',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def status(self):
         values = {'search': self.name}
         self.state = self.webservice.centreon_realtime(
             'list',
-             'hosts',
+            'hosts',
             values)[0]['state']
         return self.state
 
     def getparent(self):
         state, parent = self.webservice.call_clapi(
-                        'getparent',
-                        self.__clapi_action,
-                        self.name)
+            'getparent',
+            self._clapi_action,
+            self.name)
         if state:
             if len(parent['result']) > 0:
                 for p in parent['result']:
@@ -162,7 +162,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(parents, Host))]
         return self.webservice.call_clapi(
             'addparent',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def setparent(self, parents):
@@ -170,7 +170,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(parents, Host))]
         return self.webservice.call_clapi(
             'setparent',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def deleteparent(self, parents):
@@ -178,14 +178,14 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(parents, Host))]
         return self.webservice.call_clapi(
             'delparent',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def gethostgroup(self):
-        state, hgs =  self.webservice.call_clapi(
-                        'gethostgroup',
-                        self.__clapi_action,
-                        self.name)
+        state, hgs = self.webservice.call_clapi(
+            'gethostgroup',
+            self._clapi_action,
+            self.name)
         if state:
             if len(hgs['result']) > 0:
                 for h in hgs['result']:
@@ -202,7 +202,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(hostgroup, HostGroup))]
         return self.webservice.call_clapi(
             'addhostgroup',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def sethostgroup(self, hostgroup=None):
@@ -210,7 +210,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(hostgroup, HostGroup))]
         return self.webservice.call_clapi(
             'sethostgroup',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def deletehostgroup(self, hostgroup=None):
@@ -218,14 +218,14 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(hostgroup, HostGroup))]
         return self.webservice.call_clapi(
             'delhostgroup',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def getcontactgroup(self):
         state, cgs = self.webservice.call_clapi(
-                        'getcontactgroup',
-                        self.__clapi_action,
-                        self.name)
+            'getcontactgroup',
+            self._clapi_action,
+            self.name)
         if state:
             if len(cgs['result']) > 0:
                 for c in cgs['result']:
@@ -242,7 +242,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(contactgroups, ContactGroup))]
         return self.webservice.call_clapi(
             'addcontactgroup',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def setcontactgroup(self, contactgroups):
@@ -250,7 +250,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(contactgroups, ContactGroup))]
         return self.webservice.call_clapi(
             'setcontactgroup',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def deletecontactgroup(self, contactgroups):
@@ -258,17 +258,17 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(contactgroups, ContactGroup))]
         return self.webservice.call_clapi(
             'delcontactgroup',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def getcontact(self):
         """
         :return: state (True/False), contacts or error message
         """
-        state, cs =  self.webservice.call_clapi(
-                        'getcontact',
-                        self.__clapi_action,
-                        self.name)
+        state, cs = self.webservice.call_clapi(
+            'getcontact',
+            self._clapi_action,
+            self.name)
         if state:
             if len(cs['result']) > 0:
                 for c in cs['result']:
@@ -285,7 +285,7 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(contacts, Contact))]
         return self.webservice.call_clapi(
             'addcontact',
-             self.__clapi_action,
+            self._clapi_action,
             values)
 
     def setcontact(self, contacts):
@@ -293,27 +293,27 @@ class Host(common.CentreonObject):
                   "|".join(common.build_param(contacts, Contact))]
         return self.webservice.call_clapi(
             'setcontact',
-             self.__clapi_action,
-             values)
+            self._clapi_action,
+            values)
 
     def deletecontact(self, contacts):
         values = [self.name,
                   "|".join(common.build_param(contacts, Contact))]
         return self.webservice.call_clapi(
             'delcontact',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def setseverity(self, name):
         pass
-        #return self.webservice.call_clapi(
+        # return self.webservice.call_clapi(
         #    'setseverity',
         #    self.__clapi_action,
         #    [self.name, name])
 
     def unsetseverity(self):
         pass
-        #return self.webservice.call_clapi(
+        # return self.webservice.call_clapi(
         #    'unsetseverity',
         #    self.__clapi_action,
         #    self.name)
@@ -322,7 +322,7 @@ class Host(common.CentreonObject):
         values = [self.name, name, value]
         return self.webservice.call_clapi(
             'setparam',
-            self.__clapi_action,
+            self._clapi_action,
             values)
 
     def getparam(self, name):
@@ -333,7 +333,6 @@ class HostMacro(Macro):
     def __init__(self, properties):
         super(HostMacro, self).__init__(properties)
         self.engine_name = '$_HOST' + self.name + '$'
-
 
 
 class Hosts(common.CentreonDecorator, common.CentreonClass):
@@ -360,8 +359,8 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
     def _refresh_list(self):
         self.hosts.clear()
         state, host = self.webservice.call_clapi(
-                            'show',
-                            self._clapi_action)
+            'show',
+            self._clapi_action)
         if state and len(host['result']) > 0:
             for h in host['result']:
                 host_obj = Host(h)
@@ -403,17 +402,17 @@ class Hosts(common.CentreonDecorator, common.CentreonClass):
             str("|".join(common.build_param(hg, HostGroup))) if hg else hg
         ]
         return self.webservice.call_clapi(
-                    'add',
-                    self._clapi_action,
-                    values)
+            'add',
+            self._clapi_action,
+            values)
 
     @common.CentreonDecorator.post_refresh
     def delete(self, host, post_refresh=True):
         value = str(common.build_param(host, Host)[0])
         return self.webservice.call_clapi(
-                    'del',
-                    self._clapi_action,
-                    value)
+            'del',
+            self._clapi_action,
+            value)
 
 
 class HostTemplates(Hosts):

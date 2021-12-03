@@ -57,21 +57,26 @@ class CentreonClass(object):
 
     def __init__(self):
         self.webservice = Webservice.getInstance()
-        self.__clapi_action = ""
+        self._clapi_action = ""
 
-    @CentreonDecorator.pre_refresh
-    def get(self, name, pre_refresh=False):
-        return self[name] or None
-
-    @CentreonDecorator.pre_refresh
-    def exists(self, name, pre_refresh=False):
-        return name in self
+    # @CentreonDecorator.pre_refresh
+    # def get(self, name, pre_refresh=False):
+    #     return self[name] or None
+    #
+    # @CentreonDecorator.pre_refresh
+    # def exists(self, name, pre_refresh=False):
+    #     return name in self
 
     def list(self):
         pass
 
 
 class CentreonObject(object):
+
+    def __init__(self):
+        self.webservice = Webservice.getInstance()
+        self._clapi_action = ""
+        self.name = ""
 
     def __repr__(self):
         return self.name
