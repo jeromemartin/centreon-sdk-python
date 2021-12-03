@@ -123,15 +123,13 @@ class Services(common.CentreonDecorator, common.CentreonClass):
         else:
             return False, None
 
-    def get(self, name, host):
-        if not self.services:
-            self.list()
-        for serviceid, service in self.services.items():
-            if service.description == name and service.hostname == host:
-                return service
+    @common.CentreonDecorator.pre_refresh
+    def get(self, host, name):
+        return self[(host, name)]
 
-    def exists(self, name, host):
-        return True if self.get(name, host) else False
+    @common.CentreonDecorator.pre_refresh
+    def exists(self, host, name):
+        return (host, name) in self
 
     def _refresh_list(self):
         self.services.clear()

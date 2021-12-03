@@ -59,13 +59,13 @@ class CentreonClass(object):
         self.webservice = Webservice.getInstance()
         self._clapi_action = ""
 
-    # @CentreonDecorator.pre_refresh
-    # def get(self, name, pre_refresh=False):
-    #     return self[name] or None
-    #
-    # @CentreonDecorator.pre_refresh
-    # def exists(self, name, pre_refresh=False):
-    #     return name in self
+    @CentreonDecorator.pre_refresh
+    def get(self, name, pre_refresh=False):
+        return self[name] or None
+
+    @CentreonDecorator.pre_refresh
+    def exists(self, name, pre_refresh=False):
+        return name in self
 
     def list(self):
         pass
