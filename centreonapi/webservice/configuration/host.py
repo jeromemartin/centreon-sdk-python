@@ -35,7 +35,7 @@ class Host(common.CentreonObject):
             if len(macro['result']) > 0:
                 for m in macro['result']:
                     macro_obj = HostMacro(m)
-                    self.macros[macro_obj.engine_name] = macro_obj
+                    self.macros[macro_obj.name] = macro_obj
                 return state, self.macros
             else:
                 return state, None
@@ -47,8 +47,7 @@ class Host(common.CentreonObject):
             description = ''
         if is_password is None:
             is_password = 0
-        macro = name.replace("_HOST", "").replace("$", "").upper()
-        values = [self.name, macro, value, is_password, description]
+        values = [self.name, name, value, is_password, description]
         return self.webservice.call_clapi(
             'setmacro',
             self._clapi_action,
