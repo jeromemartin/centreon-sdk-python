@@ -5,7 +5,7 @@ from centreonapi.webservice.configuration.poller import Poller
 from centreonapi.webservice.configuration.hostgroups import HostGroup
 from centreonapi.webservice.configuration.contact import ContactGroup, Contact
 from centreonapi.webservice import Webservice
-
+from centreonapi.webservice.configuration.macro import Macro
 
 class Host(common.CentreonObject):
 
@@ -329,23 +329,11 @@ class Host(common.CentreonObject):
         pass
 
 
-class HostMacro(common.CentreonObject):
-
+class HostMacro(Macro):
     def __init__(self, properties):
-        self.name = properties.get('macro name')
-        self.value = properties.get('macro value')
-        self.description = properties.get('description', '')
-        self.is_password = properties.get('is_password')
-        self.source = properties.get('source')
-        if self.is_password == '':
-            self.is_password = 0
+        super(HostMacro, self).__init__(properties)
         self.engine_name = '$_HOST' + self.name + '$'
 
-    def __repr__(self):
-        return self.engine_name
-
-    def __str__(self):
-        return self.engine_name
 
 
 class Hosts(common.CentreonDecorator, common.CentreonClass):
