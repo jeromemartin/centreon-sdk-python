@@ -18,7 +18,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='centreonapi',
-    version='0.1.5',
+    version='0.2.0',
     description='Centreon Api for use Webservice in Centreon Web 2.8.0 or later',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Guillaume Watteeux',
