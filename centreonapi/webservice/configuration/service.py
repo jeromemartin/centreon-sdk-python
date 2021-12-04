@@ -157,10 +157,6 @@ class Services(common.CentreonDecorator, common.CentreonClass):
                                           self._clapi_action,
                                           [service.hostname,
                                            service.name])
-    #
-    # def setparam(self, service, name, value):
-    #     values = [service.hostname, service.name, name, value]
-    #     return self.webservice.call_clapi('setparam', self._clapi_action, values)
 
     #
     # def setseverity(self, hostname, servicename, name):
@@ -170,37 +166,6 @@ class Services(common.CentreonDecorator, common.CentreonClass):
     # def unsetseverity(self, hostname, servicename):
     #     values = [hostname, servicename]
     #     return self.webservice.call_clapi('unsetseverity', 'SERVICE', values)
-    #
-    # def getcontact(self, hostname, servicename):
-    #     values = [hostname, servicename]
-    #     return self.webservice.call_clapi('getcontact', 'SERVICE', values)
-    #
-    # def addcontact(self, hostname, servicename, contact):
-    #     values = [hostname, servicename, contact]
-    #     return self.webservice.call_clapi('addcontact', 'SERVICE', values)
-    #
-    # def setcontact(self, hostname, servicename, contact):
-    #     values = [hostname, servicename, '|'.join(contact)]
-    #     return self.webservice.call_clapi('setcontact', 'SERVICE', values)
-    #
-    # def getcontactgrup(self, hostname, servicename):
-    #     values = [hostname, servicename]
-    #     return self.webservice.call_clapi('getcontactgroup', 'SERVICE', values)
-    #
-    # def setcontactgroup(self, hostname, servicename, contact):
-    #     values = [hostname, servicename, '|'.join(contact)]
-    #     return self.webservice.call_clapi('setcontactgroup', 'SERVICE', values)
-    #
-    # def delcontactgroup(self, hostname, servicename, contact):
-    #     try:
-    #         for i in contact:
-    #             values = [hostname, servicename, i]
-    #             self.webservice.call_clapi('delcontactgroup',
-    #                                        'SERVICE',
-    #                                        values)
-    #         return True
-    #     except Exception:
-    #         return False
     #
 
 
