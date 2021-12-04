@@ -22,7 +22,7 @@ class ServiceTemplate(CentreonNotifyObject):
         self.passive_checks_enabled = properties.get('passive checks enabled')
         self.retry_check_interval = properties.get('retry check interval')
         self.active_check_enabled = properties.get('active checks enabled')
-
+        self.activate = "1"
         self.name = self.description
 
         self.macros = dict()
@@ -61,6 +61,18 @@ class ServiceTemplate(CentreonNotifyObject):
             'delmacro',
             self._clapi_action,
             values)
+
+    def enable(self):
+        s, e = self.setparam("activate", "1")
+        if s:
+            self.activate = "1"
+        return s, e
+
+    def disable(self):
+        s, e = self.setparam("activate", "0")
+        if s:
+            self.activate = "0"
+        return s, e
 
 
 class Service(ServiceTemplate):
@@ -189,6 +201,9 @@ class ServiceTemplates(Services):
         if state and len(service['result']) > 0:
             for s in service['result']:
                 service_obj = ServiceTemplate(s)
+                st, activate = service_obj.getparam("activate")
+                if st:
+                    service_obj.activate = activate
                 self.services[service_obj.description] = service_obj
 
     @common.CentreonDecorator.pre_refresh
