@@ -33,6 +33,7 @@ class CentreonDecorator(object):
             def hello(w, post_refresh=False):
                 ...
         """
+
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             # args[0] is always self
@@ -40,6 +41,7 @@ class CentreonDecorator(object):
             if kwargs.get("post_refresh", True):
                 args[0]._refresh_list()
             return result
+
         return wrapper
 
     @staticmethod
@@ -47,6 +49,7 @@ class CentreonDecorator(object):
         def wrapper(*args, **kwargs):
             args[0]._refresh_list()
             return func(*args, **kwargs)
+
         return wrapper
 
     def _refresh_list(self):
@@ -72,11 +75,13 @@ class CentreonClass(object):
 
 
 class CentreonObject(object):
+    OBJECT_PARAMETERS = list()
 
     def __init__(self):
         self.webservice = Webservice.getInstance()
         self._clapi_action = ""
         self.name = ""
+        self.params = dict()
 
     def __repr__(self):
         return self.name
@@ -95,22 +100,38 @@ class CentreonObject(object):
             return [self.reference] + list(values)
 
     def setparam(self, name, value):
+        if self.OBJECT_PARAMETERS and name not in self.OBJECT_PARAMETERS:
+            return False, f"No parameter {name}"
+
         values = self._prepare_values(name, value)
+        self.params[name] = value
         return self.webservice.call_clapi(
             'setparam',
             self._clapi_action,
             values)
 
     def getparam(self, name):
+        if self.OBJECT_PARAMETERS and name not in self.OBJECT_PARAMETERS:
+            return False, f"No parameter {name}"
+
         values = self._prepare_values(name)
         state, res = self.webservice.call_clapi('getparam', self._clapi_action, values)
         if state:
             res = res['result']
             if len(res) == 1:
+                self.params[name] = res[0]
                 return state, res[0]
             elif len(res) > 1:
+                self.params[name] = res
                 return state, res
             else:
                 return state, None
         else:
             return state, res
+
+    def getparams(self):
+        for p in self.OBJECT_PARAMETERS:
+            st, res = self.getparam(p)
+            if not st:
+                return st, res
+        return True, self.params
