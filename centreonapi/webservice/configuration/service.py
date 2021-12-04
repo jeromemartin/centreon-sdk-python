@@ -24,7 +24,6 @@ class ServiceTemplate(CentreonNotifyObject):
         self.active_check_enabled = properties.get('active checks enabled')
 
         self.name = self.description
-        self.activate = properties.get('activate')
 
         self.macros = dict()
 
@@ -63,6 +62,21 @@ class ServiceTemplate(CentreonNotifyObject):
             self._clapi_action,
             values)
 
+
+class Service(ServiceTemplate):
+
+    def __init__(self, properties):
+        super(Service, self).__init__(properties)
+        self._clapi_action = 'SERVICE'
+        self.hostid = properties.get('host id')
+        self.hostname = properties.get('host name')
+        self.activate = properties.get('activate')
+        self.name = self.hostname + '|' + self.description
+
+    @property
+    def reference(self):
+        return [self.hostname, self.description]
+
     def enable(self):
         s, e = self.webservice.call_clapi(
             'enable',
@@ -80,20 +94,6 @@ class ServiceTemplate(CentreonNotifyObject):
         if s:
             self.activate = "0"
         return s, e
-
-
-class Service(ServiceTemplate):
-
-    def __init__(self, properties):
-        super(Service, self).__init__(properties)
-        self._clapi_action = 'SERVICE'
-        self.hostid = properties.get('host id')
-        self.hostname = properties.get('host name')
-        self.name = self.hostname + '|' + self.description
-
-    @property
-    def reference(self):
-        return [self.hostname, self.description]
 
 
 class ServiceMacro(Macro):
