@@ -1,6 +1,6 @@
-from centreonapi.webservice.configuration.contact import Contact, ContactGroup
 import centreonapi.webservice.configuration.common as common
 from centreonapi.webservice.configuration.common import CentreonObject
+from centreonapi.webservice.configuration.contact import Contact, ContactGroup
 
 
 class CentreonNotifyObject(CentreonObject):
@@ -28,31 +28,33 @@ class CentreonNotifyObject(CentreonObject):
         else:
             return state, cs
 
-    def __contact_values(self, contacts):
-        c  = "|".join(common.build_param(contacts, Contact))
+    def _prepare_values(self, values):
         if isinstance(self.reference, list):
-            return self.reference + [c]
+            return self.reference + [values]
         else:
-            return [self.reference, c]
+            return [self.reference, values]
 
     def addcontact(self, contacts):
+        c  = "|".join(common.build_param(contacts, Contact))
         return self.webservice.call_clapi(
             'addcontact',
             self._clapi_action,
-            self.__contact_values(contacts))
+            self._prepare_values(c))
 
 
     def setcontact(self, contacts):
+        c  = "|".join(common.build_param(contacts, Contact))
         return self.webservice.call_clapi(
             'setcontact',
             self._clapi_action,
-            self.__contact_values(contacts))
+            self._prepare_values(c))
 
     def deletecontact(self, contacts):
+        c  = "|".join(common.build_param(contacts, Contact))
         return self.webservice.call_clapi(
             'delcontact',
             self._clapi_action,
-            self.__contact_values(contacts))
+            self._prepare_values(c))
 
     def getcontactgroup(self):
         state, cgs = self.webservice.call_clapi(

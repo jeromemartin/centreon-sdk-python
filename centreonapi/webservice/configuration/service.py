@@ -2,9 +2,8 @@
 
 
 import centreonapi.webservice.configuration.common as common
-
-from centreonapi.webservice.configuration.macro import Macro
 from centreonapi.webservice.configuration.common.centreonnotifyobject import CentreonNotifyObject
+from centreonapi.webservice.configuration.macro import Macro
 
 
 class ServiceTemplate(CentreonNotifyObject):
@@ -51,14 +50,14 @@ class ServiceTemplate(CentreonNotifyObject):
             description = ''
         if is_password is None:
             is_password = 0
-        values = self.reference + [name, value, is_password, description]
+        values = self._prepare_values([name, value, is_password, description])
         return self.webservice.call_clapi(
             'setmacro',
             self._clapi_action,
             values)
 
     def deletemacro(self, macro):
-        values = self.reference + ["|".join(common.build_param(macro, ServiceMacro))]
+        values = self._prepare_values(["|".join(common.build_param(macro, ServiceMacro))])
         return self.webservice.call_clapi(
             'delmacro',
             self._clapi_action,
