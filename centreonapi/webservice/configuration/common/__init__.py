@@ -87,3 +87,30 @@ class CentreonObject(object):
     @property
     def reference(self):
         return self.name
+
+    def _prepare_values(self, *values):
+        if isinstance(self.reference, list):
+            return self.reference + list(values)
+        else:
+            return [self.reference] + list(values)
+
+    def setparam(self, name, value):
+        values = self._prepare_values(name, value)
+        return self.webservice.call_clapi(
+            'setparam',
+            self._clapi_action,
+            values)
+
+    def getparam(self, name):
+        values = self._prepare_values(name)
+        state, res = self.webservice.call_clapi('getparam', self._clapi_action, values)
+        if state:
+            res = res['result']
+            if len(res) == 1:
+                return state, res[0]
+            elif len(res) > 1:
+                return state, res
+            else:
+                return state, None
+        else:
+            return state, res

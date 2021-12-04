@@ -28,29 +28,22 @@ class CentreonNotifyObject(CentreonObject):
         else:
             return state, cs
 
-    def _prepare_values(self, values):
-        if isinstance(self.reference, list):
-            return self.reference + [values]
-        else:
-            return [self.reference, values]
-
     def addcontact(self, contacts):
-        c  = "|".join(common.build_param(contacts, Contact))
+        c = "|".join(common.build_param(contacts, Contact))
         return self.webservice.call_clapi(
             'addcontact',
             self._clapi_action,
             self._prepare_values(c))
 
-
     def setcontact(self, contacts):
-        c  = "|".join(common.build_param(contacts, Contact))
+        c = "|".join(common.build_param(contacts, Contact))
         return self.webservice.call_clapi(
             'setcontact',
             self._clapi_action,
             self._prepare_values(c))
 
     def deletecontact(self, contacts):
-        c  = "|".join(common.build_param(contacts, Contact))
+        c = "|".join(common.build_param(contacts, Contact))
         return self.webservice.call_clapi(
             'delcontact',
             self._clapi_action,
@@ -72,28 +65,23 @@ class CentreonNotifyObject(CentreonObject):
         else:
             return state, cgs
 
-    def __contactgroup_values(self, contactgroups):
-        c  = "|".join(common.build_param(contactgroups, ContactGroup))
-        if isinstance(self.reference, list):
-            return self.reference + [c]
-        else:
-            return [self.reference, c]
-
     def addcontactgroup(self, contactgroups):
+        c = "|".join(common.build_param(contactgroups, ContactGroup))
         return self.webservice.call_clapi(
             'addcontactgroup',
             self._clapi_action,
-            self.__contactgroup_values(contactgroups))
+            self._prepare_values(c))
 
     def setcontactgroup(self, contactgroups):
+        c = "|".join(common.build_param(contactgroups, ContactGroup))
         return self.webservice.call_clapi(
             'setcontactgroup',
             self._clapi_action,
-            self.__contactgroup_values(contactgroups))
+            self._prepare_values(c))
 
     def deletecontactgroup(self, contactgroups):
+        c = "|".join(common.build_param(contactgroups, ContactGroup))
         return self.webservice.call_clapi(
             'delcontactgroup',
             self._clapi_action,
-            self.__contactgroup_values(contactgroups))
-
+            self._prepare_values(c))

@@ -232,15 +232,6 @@ class Host(CentreonNotifyObject):
         #    self.__clapi_action,
         #    self.name)
 
-    def setparam(self, name, value):
-        values = [self.name, name, value]
-        return self.webservice.call_clapi(
-            'setparam',
-            self._clapi_action,
-            values)
-
-    def getparam(self, name):
-        pass
 
 
 class HostMacro(Macro):
