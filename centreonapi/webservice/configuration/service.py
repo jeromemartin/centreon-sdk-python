@@ -25,6 +25,7 @@ class ServiceTemplate(CentreonNotifyObject):
         self.active_check_enabled = properties.get('active checks enabled')
 
         self.name = self.description
+        self.activate = properties.get('activate')
 
         self.macros = dict()
 
@@ -89,7 +90,6 @@ class Service(ServiceTemplate):
         self._clapi_action = 'SERVICE'
         self.hostid = properties.get('host id')
         self.hostname = properties.get('host name')
-        self.activate = properties.get('activate')
         self.name = self.hostname + '|' + self.description
 
     @property
