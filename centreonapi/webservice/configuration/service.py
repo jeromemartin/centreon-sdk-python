@@ -176,7 +176,7 @@ class ServiceTemplates(Services):
         self._clapi_action = 'STPL'
 
     @common.CentreonDecorator.post_refresh
-    def add(self, servicename, alias, template):
+    def add(self, servicename, alias="", template=""):
         values = [servicename, alias, template]
         return self.webservice.call_clapi('add',
                                           self._clapi_action,
@@ -191,3 +191,11 @@ class ServiceTemplates(Services):
             for s in service['result']:
                 service_obj = ServiceTemplate(s)
                 self.services[service_obj.description] = service_obj
+
+    @common.CentreonDecorator.pre_refresh
+    def get(self, name):
+        return self[name]
+
+    @common.CentreonDecorator.pre_refresh
+    def exists(self, name):
+        return name in self
